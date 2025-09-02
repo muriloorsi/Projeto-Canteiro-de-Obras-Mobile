@@ -1,24 +1,38 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
+import styles from "./telalogin";
 
 export default function TelaLogin() {
-  console.log("TelaLogin renderizou!");
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Bem vindo ao Login!</Text>
+      <Image
+        source={require("../../../assets/logo-metro.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+      <View style={styles.innerContainer}>
+        <Text style={styles.title}>LOGIN</Text>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Usuario</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o seu usuario"
+            placeholderTextColor="#7A869A"
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Senha</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite sua senha"
+            placeholderTextColor="#7A869A"
+            secureTextEntry
+          />
+        </View>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Entrar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    color: "#222",
-    fontSize: 20,
-  },
-});
