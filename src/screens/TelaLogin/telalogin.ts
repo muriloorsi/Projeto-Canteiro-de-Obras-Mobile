@@ -5,12 +5,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#001489",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start", 
+    paddingTop: 100, 
   },
   logo: {
     width: 223,
     height: 61,
-    marginBottom: 20,
+    marginBottom: 90,
   },
   innerContainer: {
     width: "85%",
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
     paddingHorizontal: 20,
     elevation: 5,
+    marginTop: 30,
   },
   title: {
     fontSize: 36,
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
     color: "#34405A",
   },
   button: {
-    marginTop: 16,
+    marginTop: 30,
     width: "80%",
     height: 48,
     backgroundColor: "#3B5BFE",

@@ -1,8 +1,19 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
 import styles from "./telalogin";
+import { useNavigation } from "@react-navigation/native";
+import type { StackNavigationProp } from "@react-navigation/stack";
+import type { RootStackParamList } from "../../navigation/AppNavigator";
+
+type NavigationProp = StackNavigationProp<RootStackParamList, "TelaLogin">;
 
 export default function TelaLogin() {
+  const navigation = useNavigation<NavigationProp>();
+
+  function handleEntrar() {
+    navigation.navigate("Home"); 
+  }
+
   return (
     <View style={styles.container}>
       <Image
@@ -29,7 +40,7 @@ export default function TelaLogin() {
             secureTextEntry
           />
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleEntrar}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
       </View>
