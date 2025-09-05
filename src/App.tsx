@@ -1,6 +1,11 @@
 import React from "react";
-import AppNavigator from "../src/navigation/AppNavigator";
+import AppNavigator from "./navigation/AppNavigator";
+import { HeaderProvider } from "./Header/headerContext";
 
 export default function App() {
-  return <AppNavigator />;
+  return (
+    <HeaderProvider>
+      <AppNavigator />
+    </HeaderProvider>
+  );
 }

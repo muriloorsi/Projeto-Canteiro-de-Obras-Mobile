@@ -3,20 +3,26 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Importando todas as telas
-import Home from "../src/screens/TelaHome";
-import TelaProjetosDetalhes from "../src/screens/TelaProjetosDetalhes";
-import TelaAdicionarImagem from "../src/screens/TelaAdicionarImagem";
-import TelaCriarProjeto from "../src/screens/TelaCriarProjeto";
-import TelaCriarProjetoAdicionarImagem from "../src/screens/TelaCriarProjeto/TelaCriarProjetoAdicionarImagem";
-import TelaCriarProjetoAdicionarEtapas from "../src/screens/TelaCriarProjeto/TelaCriarProjetoAdicionarEtapas";
-import TelaLogin from "../src/screens/TelaLogin";
-import TelaProximaEtapas from "../src/screens/TelaProximaEtapas";
-import TelaTodosAlerta from "../src/screens/TelaTodosAlerta";
-import TelaAlerta from "../src/screens/TelaTodosAlerta/TelaAlerta";
+import Home from "../screens/TelaHome";
+import TelaProjetosDetalhes from "../screens/TelaProjetosDetalhes";
+import TelaAdicionarImagem from "../screens/TelaAdicionarImagem";
+import TelaRelatorios from "../screens/TelaRelatorios";
+import TelaGerenciamentoUsuario from "../screens/TelaGerenciamentoUsuario";
+import TelaCriarProjeto from "../screens/TelaCriarProjeto";
+import TelaCriarProjetoAdicionarImagem from "../screens/TelaCriarProjeto/TelaCriarProjetoAdicionarImagem";
+import TelaCriarProjetoAdicionarEtapas from "../screens/TelaCriarProjeto/TelaCriarProjetoAdicionarEtapas";
+import TelaLogin from "../screens/TelaLogin";
+import TelaProximaEtapas from "../screens/TelaProximaEtapas";
+import TelaTodosAlerta from "../screens/TelaTodosAlerta";
+import TelaAlerta from "../screens/TelaTodosAlerta/TelaAlerta";
+import TelaUsuario from "../screens/TelaUsuarios";
 
-// Tipagem das rotas
+
 export type RootStackParamList = {
   Home: undefined;
+  TelaUsuario: undefined;
+  TelaRelatorios: undefined;
+  TelaGerenciamentoUsuario: undefined;
   TelaProjetosDetalhes: undefined;
   TelaAdicionarImagem: undefined;
   TelaCriarProjeto: undefined;
@@ -39,7 +45,7 @@ export default function AppNavigator() {
           component={TelaLogin}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="TelaHome" component={Home} />
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen
           name="TelaProjetosDetalhes"
           component={TelaProjetosDetalhes}
@@ -57,6 +63,9 @@ export default function AppNavigator() {
           name="TelaCriarProjetoAdicionarEtapas"
           component={TelaCriarProjetoAdicionarEtapas}
         />
+        <Stack.Screen name="TelaUsuario" component={TelaUsuario} />
+        <Stack.Screen name="TelaRelatorios" component={TelaRelatorios} />
+        <Stack.Screen name="TelaGerenciamentoUsuario" component={TelaGerenciamentoUsuario} />
         <Stack.Screen
           name="TelaProximaEtapas"
           component={TelaProximaEtapas}
