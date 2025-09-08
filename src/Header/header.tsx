@@ -4,13 +4,17 @@ import { View, Text, Image, StyleSheet } from "react-native";
 export default function Header() {
   return (
     <View style={styles.header}>
-      <Image
-        source={require("../../assets/logo-metro.png")} // ajuste o caminho conforme seu projeto
-        style={styles.logo}
-        resizeMode="contain"
-      />
+      <View style={styles.section}>
+        <Image
+          source={require("../../assets/logo2.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
       <View style={styles.divider} />
-      <Text style={styles.title}>Canteiro de{"\n"}Obras</Text>
+      <View style={styles.section}>
+        <Text style={styles.title}>Metro SP -{"\n"}Canteiro de Obras</Text>
+      </View>
     </View>
   );
 }
@@ -20,26 +24,30 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#D9D9D9",
+    backgroundColor: "#001489",
     paddingHorizontal: 24,
     paddingVertical: 12,
+    justifyContent: "center",
+  },
+  section: {
+    flex: 1,
+    alignItems: "center",
     justifyContent: "center",
   },
   logo: {
     width: 50,
     height: 69,
-    marginRight: 16,
   },
   divider: {
     width: 3,
     height: 60,
-    backgroundColor: "#222",
-    marginRight: 16,
+    backgroundColor: "white",
+    marginHorizontal: 16,
   },
   title: {
-    fontSize: 20,
-    color: "#111",
+    fontSize: 16,
+    color: "white",
     fontWeight: "bold",
-    flexShrink: 1,
+    textAlign: "center",
   },
 });

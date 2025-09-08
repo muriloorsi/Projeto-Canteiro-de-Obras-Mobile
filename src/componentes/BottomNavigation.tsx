@@ -33,9 +33,9 @@ export default function BottomNavigation() {
 const styles = StyleSheet.create({
   menuContainer: {
     flexDirection: "row",
-    backgroundColor: "#D9D9D9",
+    backgroundColor: "#001489",
     width: 360,
-    height: 70,
+    height: 80,
     justifyContent: "space-between",
     alignItems: "center",
     borderRadius: 15,
