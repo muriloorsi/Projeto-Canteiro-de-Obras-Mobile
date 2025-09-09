@@ -12,7 +12,7 @@ export default function TelaHome() {
   return (
     <View style={{ flex: 1, backgroundColor: "#F9FAFB" }}>
       <Header />
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" , paddingTop: "10%"}}>
         <TouchableOpacity style={styles.card} onPress={handleCardPress}>
           <Image
             source={require("../../../assets/obra.png")}
