@@ -11,14 +11,14 @@ export default function BottomNavigation() {
 
   return (
     <View style={styles.menuContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Image source={require("../../assets/home.png")} style={styles.icon} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("TelaGerenciamentoUsuario")}>
+      <TouchableOpacity >
         <Image source={require("../../assets/usuarios.png")} style={styles.icon} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("TelaRelatorios")}>
         <Image source={require("../../assets/relatorio.png")} style={styles.icon} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Image source={require("../../assets/home.png")} style={styles.icon} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("TelaCriarProjeto")}>
         <Image source={require("../../assets/add.png")} style={styles.icon} />
