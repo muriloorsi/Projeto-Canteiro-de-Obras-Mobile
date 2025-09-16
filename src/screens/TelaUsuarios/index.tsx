@@ -1,24 +1,22 @@
+// src/screens/TelaUsuarios/index.tsx
+
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, ActivityIndicator } from "react-native";
 import Header from "../../Header/header";
-import { styles } from "./TelaUsuarios";
-const defaultProfileImage = require('../../../assets/perfil.png');
+import { styles } from "./telausuarios";
+import BottomNavigation from "../../componentes/BottomNavigation";
+
+const defaultProfileImage = require("../../../assets/perfil.png");
 
 export default function Usuario() {
   const [loading, setLoading] = useState(true);
   const [usuario, setUsuario] = useState<any>(null);
 
-  // Simulação de requisição ao banco
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-        // Aqui você faria a chamada real à API
-        // const response = await fetch("http://seu-backend.com/api/usuario/1");
-        // const data = await response.json();
-
-        // Mock de resposta do banco
         const data = {
-          imagemusuario: "", // vazio = sem foto
+          imagemusuario: "",
           nome: "Murilo Orsi Marchezzane",
           permissao: "Administrador",
           email: "murilo@email.com",
@@ -37,7 +35,12 @@ export default function Usuario() {
 
   if (loading) {
     return (
-      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
         <ActivityIndicator size="large" color="#003087" />
       </View>
     );
@@ -45,8 +48,15 @@ export default function Usuario() {
 
   if (!usuario) {
     return (
-      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
-        <Text style={{ fontSize: 16, color: "#333" }}>Não foi possível carregar os dados do usuário.</Text>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <Text style={{ fontSize: 16, color: "#333" }}>
+          Não foi possível carregar os dados do usuário.
+        </Text>
       </View>
     );
   }
@@ -61,7 +71,11 @@ export default function Usuario() {
           {/* Imagem de Perfil */}
           <View style={{ alignItems: "center", marginBottom: 20 }}>
             <Image
-              source={usuario.imagemusuario ? { uri: usuario.imagemusuario } : defaultProfileImage}
+              source={
+                usuario.imagemusuario
+                  ? { uri: usuario.imagemusuario }
+                  : defaultProfileImage
+              }
               style={{
                 width: 120,
                 height: 120,
@@ -96,6 +110,9 @@ export default function Usuario() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Navegação Inferior */}
+      <BottomNavigation />
     </View>
   );
 }

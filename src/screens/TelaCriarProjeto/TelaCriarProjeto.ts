@@ -96,6 +96,9 @@ export const styles = StyleSheet.create({
   nextBtn: {
     backgroundColor: "#003087",
   },
+  cancelBtn: {
+    backgroundColor: "#d62828", // Cor para o botão de cancelar
+  },
   backBtn: {
     backgroundColor: "#d62828",
   },
@@ -115,6 +118,11 @@ export const styles = StyleSheet.create({
   buttonRight: {
     flexDirection: "row",
     justifyContent: "flex-end",
+    marginTop: 10,
+  },
+  buttonGroup: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Alterado para 'space-between'
     marginTop: 10,
   },
   stageForm: {

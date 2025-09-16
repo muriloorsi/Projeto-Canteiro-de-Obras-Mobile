@@ -1,3 +1,5 @@
+// src/screens/TelaUsuarios/TelaUsuarios.ts
+
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -8,6 +10,8 @@ export const styles = StyleSheet.create({
   scroll: {
     padding: 20,
     alignItems: "center",
+    // Adicione um padding na parte inferior para a barra de navegação
+    paddingBottom: 80,
   },
   card: {
     backgroundColor: "#f9f9f9",

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Image, StyleSheet, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import type { RootStackParamList } from "../navigation/AppNavigator";
@@ -9,10 +9,29 @@ type NavigationProp = StackNavigationProp<RootStackParamList>;
 export default function BottomNavigation() {
   const navigation = useNavigation<NavigationProp>();
 
+  const handleLogout = () => {
+    Alert.alert(
+      "Confirmar Saída", // Título do alerta
+      "Tem certeza que deseja sair da sua conta?", // Mensagem do alerta
+      [
+        {
+          text: "Cancelar", // Botão para cancelar a ação
+          onPress: () => console.log("Saída cancelada"),
+          style: "cancel",
+        },
+        {
+          text: "Confirmar", // Botão para confirmar a ação
+          onPress: () => navigation.navigate("TelaLogin"), // Navega para a tela de login
+        },
+      ],
+      { cancelable: false } // Impede que o usuário feche o alerta clicando fora
+    );
+  };
+
   return (
     <View style={styles.menuContainer}>
-      <TouchableOpacity >
-        <Image source={require("../../assets/usuarios.png")} style={styles.icon} />
+      <TouchableOpacity onPress={handleLogout}>
+        <Image source={require("../../assets/sair.png")} style={styles.icon} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("TelaRelatorios")}>
         <Image source={require("../../assets/relatorio.png")} style={styles.icon} />

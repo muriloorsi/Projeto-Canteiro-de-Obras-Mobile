@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#001489",
     paddingHorizontal: 24,
-    paddingVertical: 12,
-    justifyContent: "center",
+    paddingVertical: 30,
+    justifyContent: "center"
   },
   section: {
     flex: 1,

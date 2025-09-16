@@ -7,13 +7,13 @@ import {
   ScrollView,
   Modal,
   Platform,
-  Alert,
+  Alert, // ⬅️ O componente Alert já está importado, o que é ótimo!
   Image,
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../../Header/header";
-import { styles } from "./TelaCriarProjeto";
+import { styles } from "./telacriarprojeto";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 
@@ -38,7 +38,7 @@ const isTabletOrDesktop = width >= 768;
 
 const lines = ["Selecionar", "Linha 1", "Linha 2", "Linha 3"];
 const stations = ["Selecionar", "Estação A", "Estação B", "Estação C"];
-const statuses = ["Selecionar", "Em Andamento", "Concluído", "Pendente"];
+const statuses = ["Selecionar", "Pendente", "Em Andamento", "Concluído"];
 
 const Picker = ({
   label,
@@ -49,7 +49,11 @@ const Picker = ({
   value: string;
   onPress: () => void;
 }) => (
-  <View style={isTabletOrDesktop ? styles.inputGroupDesktop : styles.inputGroupMobile}>
+  <View
+    style={
+      isTabletOrDesktop ? styles.inputGroupDesktop : styles.inputGroupMobile
+    }
+  >
     <Text style={styles.label}>{label}</Text>
     <TouchableOpacity onPress={onPress} style={styles.pickerContainer}>
       <Text style={styles.pickerText}>{value}</Text>
@@ -107,16 +111,25 @@ export default function CriarProjeto() {
       } else if (showDatePicker === "termino") {
         setForm({ ...form, fim: selectedDate });
       } else if (showDatePicker === "etapaInicio") {
-        setNovaEtapa({ ...novaEtapa, inicio: selectedDate.toLocaleDateString("pt-BR") });
+        setNovaEtapa({
+          ...novaEtapa,
+          inicio: selectedDate.toLocaleDateString("pt-BR"),
+        });
       } else if (showDatePicker === "etapaFim") {
-        setNovaEtapa({ ...novaEtapa, fim: selectedDate.toLocaleDateString("pt-BR") });
+        setNovaEtapa({
+          ...novaEtapa,
+          fim: selectedDate.toLocaleDateString("pt-BR"),
+        });
       }
     }
   };
 
   const pickImage = async () => {
     if (form.imagens.length >= 3) {
-      Alert.alert("Limite de Imagens", "Você pode adicionar no máximo 3 imagens.");
+      Alert.alert(
+        "Limite de Imagens",
+        "Você pode adicionar no máximo 3 imagens."
+      );
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -172,16 +185,40 @@ export default function CriarProjeto() {
     }
   };
 
+  const handleCancel = () => {
+    Alert.alert(
+      "Confirmar Cancelamento",
+      "Você tem certeza que deseja cancelar? Todo o progresso será perdido.",
+      [
+        {
+          text: "Não",
+          style: "cancel",
+        },
+        {
+          text: "Sim",
+          onPress: () => navigation.navigate("Home" as never),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const renderStepContent = () => {
     switch (step) {
       case 1:
         return (
           <>
             <View
-              style={isTabletOrDesktop ? styles.formRowDesktop : styles.formRowMobile}
+              style={
+                isTabletOrDesktop ? styles.formRowDesktop : styles.formRowMobile
+              }
             >
               <View
-                style={isTabletOrDesktop ? styles.inputGroupDesktop : styles.inputGroupMobile}
+                style={
+                  isTabletOrDesktop
+                    ? styles.inputGroupDesktop
+                    : styles.inputGroupMobile
+                }
               >
                 <Text style={styles.label}>Nome do Projeto</Text>
                 <TextInput
@@ -199,20 +236,43 @@ export default function CriarProjeto() {
             </View>
 
             <View
-              style={isTabletOrDesktop ? styles.formRowDesktop : styles.formRowMobile}
+              style={
+                isTabletOrDesktop ? styles.formRowDesktop : styles.formRowMobile
+              }
             >
               <Picker
                 label="Estação"
                 value={form.estacao}
                 onPress={() => setShowStationPicker(true)}
               />
+              <View
+                style={
+                  isTabletOrDesktop
+                    ? styles.inputGroupDesktop
+                    : styles.inputGroupMobile
+                }
+              >
+                <Text style={styles.label}>Status</Text>
+                <TouchableOpacity
+                  onPress={() => setShowStatusPicker(true)}
+                  style={styles.pickerContainer}
+                >
+                  <Text style={styles.pickerText}>{form.status}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
             <View
-              style={isTabletOrDesktop ? styles.formRowDesktop : styles.formRowMobile}
+              style={
+                isTabletOrDesktop ? styles.formRowDesktop : styles.formRowMobile
+              }
             >
               <View
-                style={isTabletOrDesktop ? styles.inputGroupDesktop : styles.inputGroupMobile}
+                style={
+                  isTabletOrDesktop
+                    ? styles.inputGroupDesktop
+                    : styles.inputGroupMobile
+                }
               >
                 <Text style={styles.label}>Data de Início</Text>
                 <TouchableOpacity
@@ -222,14 +282,19 @@ export default function CriarProjeto() {
                   <TextInput
                     style={styles.dateInput}
                     placeholder="DD/MM/AAAA"
-                    value={form.inicio ? form.inicio.toLocaleDateString("pt-BR") : ""}
+                    value={
+                      form.inicio ? form.inicio.toLocaleDateString("pt-BR") : ""
+                    }
                     editable={false}
                   />
-                  <Text style={styles.calendarIcon}>📅</Text>
                 </TouchableOpacity>
               </View>
               <View
-                style={isTabletOrDesktop ? styles.inputGroupDesktop : styles.inputGroupMobile}
+                style={
+                  isTabletOrDesktop
+                    ? styles.inputGroupDesktop
+                    : styles.inputGroupMobile
+                }
               >
                 <Text style={styles.label}>Data de Término</Text>
                 <TouchableOpacity
@@ -242,16 +307,16 @@ export default function CriarProjeto() {
                     value={form.fim ? form.fim.toLocaleDateString("pt-BR") : ""}
                     editable={false}
                   />
-                  <Text style={styles.calendarIcon}>📅</Text>
                 </TouchableOpacity>
               </View>
-              <Picker
-                label="Status"
-                value={form.status}
-                onPress={() => setShowStatusPicker(true)}
-              />
             </View>
-            <View style={styles.buttonRight}>
+            <View style={styles.buttonGroup}>
+              <TouchableOpacity
+                style={[styles.button, styles.cancelBtn]}
+                onPress={handleCancel}
+              >
+                <Text style={styles.buttonText}>Cancelar</Text>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.nextBtn]}
                 onPress={handleNextStep1}
@@ -335,7 +400,6 @@ export default function CriarProjeto() {
                       value={novaEtapa.inicio}
                       editable={false}
                     />
-                    <Text style={styles.calendarIcon}>📅</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.inputGroupMobile}>
@@ -350,7 +414,6 @@ export default function CriarProjeto() {
                       value={novaEtapa.fim}
                       editable={false}
                     />
-                    <Text style={styles.calendarIcon}>📅</Text>
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity

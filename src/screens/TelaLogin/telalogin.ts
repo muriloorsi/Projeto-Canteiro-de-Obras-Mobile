@@ -5,8 +5,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#001489",
     alignItems: "center",
-    justifyContent: "flex-start", 
-    paddingTop: 100, 
+    justifyContent: "flex-start",
+    paddingTop: 100,
   },
   logo: {
     width: 223,
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     paddingVertical: 32,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20, 
     elevation: 5,
     marginTop: 30,
   },
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     letterSpacing: 2,
     marginBottom: 24,
+    paddingHorizontal: 9,
   },
   inputGroup: {
     width: "100%",
