@@ -87,6 +87,30 @@ export default function TelaProjetos() {
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.list}
       />
+      <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "center" , paddingTop: "10%"}}>
+        <TouchableOpacity style={styles.card} onPress={handleCardPress}>
+          <Image
+            source={require("../../../assets/obra.png")}
+            style={styles.cardImage}
+            resizeMode="cover"
+          />
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>
+              Expansão Linha 2 - Verde{"\n"}Estação Vila Formosa
+            </Text>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoText}>Última Alteração: 20/08/2025</Text>
+              <Text style={styles.infoText}>Status: Em Andamento</Text>
+            </View>
+            <View style={styles.progressBarContainer}>
+              <View style={styles.progressBarBackground}>
+                <View style={[styles.progressBarFill, { width: "80%" }]} />
+              </View>
+              <Text style={styles.progressText}>80%</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
       <BottomNavigation />
     </View>
   );
