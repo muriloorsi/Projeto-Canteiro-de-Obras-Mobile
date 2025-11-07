@@ -1,111 +1,137 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, ActivityIndicator, Alert} from "react-native";
 import Header from "../../Header/header";
-import BottomNavigation from "../../componentes/BottomNavigation";
-import styles from "./telarelatorios";
+import BottomNavigation from "../../navigation/BottomNavigation";
+import { styles } from "./TelaRelatorios";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../components/firebase/firebaseConfig";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
 
-interface Projeto {
-  id: number;
-  nome: string;
-  linha: string;
-  estacao: string;
-  status: "Finalizado" | "Em andamento" | "Não iniciado";
+// Tipagem do projeto
+interface Project {
+  id?: string;
+  name: string;
+  line: string;
+  station: string;
+  status: string;
+  startDate: any;
+  endDate: any;
+  steps?: { name: string; startDate: any; endDate: any }[];
 }
 
 export default function TelaRelatorios() {
   const [filtro, setFiltro] = useState<string>("Todos");
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    setLoading(true);
+  // Função para formatar data (Timestamp ou string)
+  function formatDate(dateObj: any) {
+    if (!dateObj) return "";
 
-    // Dados de exemplo para simular a API
-    setTimeout(() => {
-      setProjetos([
-        {
-          id: 1,
-          nome: "Expansão Linha 2",
-          linha: "Verde Estação Vila Formosa",
-          estacao: "Vila Formosa",
-          status: "Em andamento",
-        },
-        {
-          id: 2,
-          nome: "Expansão Linha 3",
-          linha: "Vermelha Estação Tatuapé",
-          estacao: "Tatuapé",
-          status: "Em andamento",
-        },
-        {
-          id: 3,
-          nome: "Expansão Linha 1",
-          linha: "Azul Estação Sé",
-          estacao: "Sé",
-          status: "Finalizado",
-        },
-        {
-          id: 4,
-          nome: "Expansão Linha 4",
-          linha: "Amarela Estação Pinheiros",
-          estacao: "Pinheiros",
-          status: "Não iniciado",
-        },
-        // Adicionando mais projetos para forçar a rolagem
-        {
-          id: 5,
-          nome: "Nova Estação Jabaquara",
-          linha: "Azul Estação Jabaquara",
-          estacao: "Jabaquara",
-          status: "Em andamento",
-        },
-        {
-          id: 6,
-          nome: "Melhoria Linha 5",
-          linha: "Lilás Estação Chácara Klabin",
-          estacao: "Chácara Klabin",
-          status: "Finalizado",
-        },
-        {
-          id: 7,
-          nome: "Sinalização Linha 15",
-          linha: "Prata Estação São Mateus",
-          estacao: "São Mateus",
-          status: "Não iniciado",
-        },
-        {
-          id: 8,
-          nome: "Reforma Estação Consolação",
-          linha: "Verde Estação Consolação",
-          estacao: "Consolação",
-          status: "Em andamento",
-        },
-        {
-          id: 9,
-          nome: "Reforma Estação Sé",
-          linha: "Azul Estação Sé",
-          estacao: "Sé",
-          status: "Finalizado",
-        },
-      ]);
+    if (dateObj.toDate) {
+      return dateObj.toDate().toLocaleDateString("pt-BR");
+    }
+    if (dateObj._seconds) {
+      return new Date(dateObj._seconds * 1000).toLocaleDateString("pt-BR");
+    }
+    if (typeof dateObj === "string") {
+      return dateObj;
+    }
+
+    return "";
+  }
+
+  // 🔥 Buscar dados diretamente do Firestore
+  async function carregarProjetos() {
+    try {
+      setLoading(true);
+      const snapshot = await getDocs(collection(db, "projects"));
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Project[];
+
+      setProjects(data);
+    } catch (error) {
+      console.error("Erro ao buscar projetos:", error);
+      Alert.alert("Erro", "Não foi possível carregar os projetos.");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
+  }
+
+  useEffect(() => {
+    carregarProjetos();
   }, []);
 
-  const filteredProjetos = projetos.filter((projeto) => {
-    const statusMatch = filtro === "Todos" || projeto.status === filtro;
+  // ✅ Função para gerar PDF usando expo-print
+  const gerarRelatorioPDF = async (project: Project) => {
+    try {
+      const dataEmissao = new Date().toLocaleDateString("pt-BR");
+      const startDate = formatDate(project.startDate);
+      const endDate = formatDate(project.endDate);
+
+      const etapasHTML =
+        project.steps && project.steps.length > 0
+          ? project.steps
+              .map(
+                (etapa, i) => `
+          <p style="margin:4px 0;">
+            <b>${i + 1}.</b> ${etapa.name} (${formatDate(etapa.startDate)} até ${formatDate(
+                  etapa.endDate
+                )})
+          </p>`
+              )
+              .join("")
+          : "<p>Nenhuma etapa cadastrada.</p>";
+
+      const htmlContent = `
+        <html>
+          <head>
+            <meta charset="UTF-8" />
+            <style>
+              body { font-family: Arial; padding: 24px; color: #222; }
+              h1 { color: #003087; font-size: 22px; margin-bottom: 10px; }
+              p, h3 { font-size: 14px; margin: 4px 0; }
+              .section { margin-top: 15px; }
+            </style>
+          </head>
+          <body>
+            <h1>Relatório do Projeto</h1>
+            <p><b>Nome do Projeto:</b> ${project.name}</p>
+            <p><b>Data de Emissão:</b> ${dataEmissao}</p>
+            <p><b>Status:</b> ${project.status}</p>
+            <p><b>Data de Início:</b> ${startDate}</p>
+            <p><b>Data de Fim:</b> ${endDate}</p>
+            <div class="section">
+              <h3>Etapas:</h3>
+              ${etapasHTML}
+            </div>
+          </body>
+        </html>
+      `;
+
+      // Gera o arquivo PDF
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+
+      // Compartilha o arquivo
+      await Sharing.shareAsync(uri);
+
+      Alert.alert("Sucesso", "Relatório gerado e pronto para compartilhamento!");
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível gerar o relatório.");
+      console.error(error);
+    }
+  };
+
+  // 🔍 Filtro e busca
+  const filteredProjects = projects.filter((project) => {
+    const statusMatch = filtro === "Todos" || project.status === filtro;
     const searchMatch =
-      projeto.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      projeto.linha.toLowerCase().includes(searchTerm.toLowerCase());
+      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.line.toLowerCase().includes(searchTerm.toLowerCase());
     return statusMatch && searchMatch;
   });
 
@@ -114,7 +140,7 @@ export default function TelaRelatorios() {
       <Header />
 
       <View style={styles.mainContent}>
-        {/* Barra de busca */}
+        {/* 🔎 Barra de busca */}
         <TextInput
           style={styles.searchInput}
           placeholder="Digite o nome do projeto"
@@ -122,7 +148,7 @@ export default function TelaRelatorios() {
           onChangeText={setSearchTerm}
         />
 
-        {/* Filtros */}
+        {/* 🎯 Filtros */}
         <View style={styles.filterContainer}>
           {["Todos", "Finalizado", "Em andamento", "Não iniciado"].map(
             (status) => (
@@ -147,18 +173,18 @@ export default function TelaRelatorios() {
           )}
         </View>
 
-        {/* Lista de projetos com rolagem */}
+        {/* 📋 Lista de projetos */}
         {loading ? (
           <ActivityIndicator size="large" color="#003087" />
         ) : (
           <FlatList
-            data={filteredProjetos}
-            keyExtractor={(item) => item.id.toString()}
+            data={filteredProjects}
+            keyExtractor={(item) => item.id || item.name}
             renderItem={({ item }) => (
               <View style={styles.projectCard}>
                 <View style={styles.projectInfo}>
                   <Text style={styles.projectTitle}>
-                    {item.nome} - {item.linha}
+                    {item.name} - {item.line}
                   </Text>
                   <Text
                     style={[
@@ -173,7 +199,10 @@ export default function TelaRelatorios() {
                     {item.status}
                   </Text>
                 </View>
-                <TouchableOpacity style={styles.reportButton}>
+                <TouchableOpacity
+                  style={styles.reportButton}
+                  onPress={() => gerarRelatorioPDF(item)}
+                >
                   <Text style={styles.reportButtonText}>Obter Relatório</Text>
                 </TouchableOpacity>
               </View>

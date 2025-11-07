@@ -33,27 +33,27 @@ export default function AppNavigator() {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{ headerShown: false }} // ⬅️ Desabilita o header para a tela Home
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="TelaProjetosDetalhes"
           component={TelaProjetosDetalhes}
-          options={{ headerShown: false }} // ⬅️ Desabilita para a tela de Detalhes
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="TelaCriarProjeto"
           component={TelaCriarProjeto}
-          options={{ headerShown: false }} // ⬅️ Desabilita para a tela de Criação
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="TelaUsuario"
           component={TelaUsuario}
-          options={{ headerShown: false }} // ⬅️ Desabilita para a tela de Usuário
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="TelaRelatorios"
           component={TelaRelatorios}
-          options={{ headerShown: false }} // ⬅️ Esta é a sua correção
+          options={{ headerShown: false }} 
         />
       </Stack.Navigator>
     </NavigationContainer>

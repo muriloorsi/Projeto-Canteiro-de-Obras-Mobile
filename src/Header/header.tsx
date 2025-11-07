@@ -6,7 +6,7 @@ export default function Header() {
     <View style={styles.header}>
       <View style={styles.section}>
         <Image
-          source={require("../../assets/logo2.png")}
+          source={require("../../src/assets/logo-metro.png")}
           style={styles.logo}
           resizeMode="contain"
         />

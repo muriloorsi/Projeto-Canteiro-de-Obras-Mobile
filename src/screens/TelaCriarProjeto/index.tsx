@@ -1,19 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Modal,
-  Platform,
-  Alert, // ⬅️ O componente Alert já está importado, o que é ótimo!
-  Image,
-  Dimensions,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, Alert, Image, Dimensions} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../../Header/header";
-import { styles } from "./telacriarprojeto";
+import { styles } from "./TelaCriarProjeto";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 

@@ -1,16 +1,16 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#001489",
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingTop: 100,
+    paddingTop: 60,
   },
   logo: {
-    width: 223,
-    height: 61,
+    width: 280,
+    height: 75,
     marginBottom: 90,
   },
   innerContainer: {
@@ -19,14 +19,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     paddingVertical: 32,
-    paddingHorizontal: 20, 
+    paddingHorizontal: 20,
     elevation: 5,
     marginTop: 30,
   },
   title: {
     fontSize: 36,
     color: "#34405A",
-    fontWeight: "400",
+    fontWeight: "600",
     letterSpacing: 2,
     marginBottom: 24,
     paddingHorizontal: 9,
@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontSize: 16,
+    fontSize: 20,
     color: "#34405A",
     marginBottom: 4,
-    marginLeft: 4,
+    marginLeft: 6,
   },
   input: {
     width: "100%",
@@ -52,11 +52,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#34405A",
   },
+  errorMessage: {
+    width: "100%",
+    color: "#D32F2F",
+    fontSize: 14,
+    marginTop: -4,
+    marginBottom: 8,
+    textAlign: "left",
+    marginLeft: 4,
+  },
   button: {
     marginTop: 30,
     width: "80%",
     height: 48,
-    backgroundColor: "#3B5BFE",
+    backgroundColor: "#001489",
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
@@ -67,6 +76,15 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "500",
     letterSpacing: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  helperText: {
+    color: "#7A869A",
+    fontSize: 12,
+    marginTop: 12,
+    textAlign: "center",
   },
 });
 
