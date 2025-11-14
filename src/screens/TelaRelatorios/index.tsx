@@ -1,218 +1,276 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, ActivityIndicator, Alert} from "react-native";
-import Header from "../../Header/header";
-import BottomNavigation from "../../navigation/BottomNavigation";
-import { styles } from "./TelaRelatorios";
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../components/firebase/firebaseConfig";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
+import Header from "../../Header/header";
+import BottomNavigation from "../../navigation/BottomNavigation";
+import { db } from "../../components/firebase/firebaseConfig";
+import { styles } from "./TelaRelatorios";
 
-// Tipagem do projeto
+interface Step {
+  name: string;
+  startDate: any;
+  endDate: any;
+}
+
 interface Project {
   id?: string;
   name: string;
   line: string;
-  station: string;
+  station?: string;
   status: string;
   startDate: any;
   endDate: any;
-  steps?: { name: string; startDate: any; endDate: any }[];
+  steps?: Step[];
+}
+
+interface AnalysisReport {
+  id?: string;
+  projectName: string;
+  createdBy?: string;
+  createdAt: any;
+  contexto?: string;
+  resultado: {
+    percentual_conformidade: number;
+    status_obra: string;
+    resumo_executivo: string;
+    divergencias_encontradas?: { tipo: string; criticidade: string; descricao: string }[];
+    recomendacoes_imediatas?: string[];
+  };
 }
 
 export default function TelaRelatorios() {
-  const [filtro, setFiltro] = useState<string>("Todos");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [tipoRelatorio, setTipoRelatorio] = useState("Todos");
+  const [filtro, setFiltro] = useState("Todos");
+  const [searchTerm, setSearchTerm] = useState("");
   const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [analysisReports, setAnalysisReports] = useState<AnalysisReport[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Função para formatar data (Timestamp ou string)
   function formatDate(dateObj: any) {
     if (!dateObj) return "";
-
-    if (dateObj.toDate) {
-      return dateObj.toDate().toLocaleDateString("pt-BR");
-    }
-    if (dateObj._seconds) {
-      return new Date(dateObj._seconds * 1000).toLocaleDateString("pt-BR");
-    }
-    if (typeof dateObj === "string") {
-      return dateObj;
-    }
-
+    if (dateObj.toDate) return dateObj.toDate().toLocaleDateString("pt-BR");
+    if (dateObj._seconds) return new Date(dateObj._seconds * 1000).toLocaleDateString("pt-BR");
+    if (typeof dateObj === "string") return dateObj;
     return "";
   }
 
-  // 🔥 Buscar dados diretamente do Firestore
-  async function carregarProjetos() {
+  async function carregarDados() {
     try {
       setLoading(true);
-      const snapshot = await getDocs(collection(db, "projects"));
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Project[];
+      const [projSnap, analSnap] = await Promise.all([
+        getDocs(collection(db, "projects")),
+        getDocs(collection(db, "analysisReports")),
+      ]);
 
-      setProjects(data);
+      setProjects(projSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Project[]);
+      setAnalysisReports(analSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as AnalysisReport[]);
     } catch (error) {
-      console.error("Erro ao buscar projetos:", error);
-      Alert.alert("Erro", "Não foi possível carregar os projetos.");
+      console.error("Erro ao buscar dados:", error);
+      Alert.alert("Erro", "Não foi possível carregar relatórios.");
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    carregarProjetos();
+    carregarDados();
   }, []);
 
-  // ✅ Função para gerar PDF usando expo-print
-  const gerarRelatorioPDF = async (project: Project) => {
+  async function gerarRelatorioProjeto(project: Project) {
     try {
       const dataEmissao = new Date().toLocaleDateString("pt-BR");
-      const startDate = formatDate(project.startDate);
-      const endDate = formatDate(project.endDate);
 
-      const etapasHTML =
-        project.steps && project.steps.length > 0
-          ? project.steps
-              .map(
-                (etapa, i) => `
-          <p style="margin:4px 0;">
-            <b>${i + 1}.</b> ${etapa.name} (${formatDate(etapa.startDate)} até ${formatDate(
+      const etapasHTML = project.steps?.length
+        ? project.steps
+            .map(
+              (etapa, i) =>
+                `<p><b>${i + 1}.</b> ${etapa.name} (${formatDate(etapa.startDate)} até ${formatDate(
                   etapa.endDate
-                )})
-          </p>`
-              )
-              .join("")
-          : "<p>Nenhuma etapa cadastrada.</p>";
+                )})</p>`
+            )
+            .join("")
+        : "<p>Nenhuma etapa cadastrada.</p>";
 
-      const htmlContent = `
+      const html = `
         <html>
-          <head>
-            <meta charset="UTF-8" />
-            <style>
-              body { font-family: Arial; padding: 24px; color: #222; }
-              h1 { color: #003087; font-size: 22px; margin-bottom: 10px; }
-              p, h3 { font-size: 14px; margin: 4px 0; }
-              .section { margin-top: 15px; }
-            </style>
-          </head>
-          <body>
-            <h1>Relatório do Projeto</h1>
+          <body style="font-family: Arial; padding: 24px;">
+            <h2 style="color:#003087;">Relatório do Projeto</h2>
             <p><b>Nome do Projeto:</b> ${project.name}</p>
             <p><b>Data de Emissão:</b> ${dataEmissao}</p>
             <p><b>Status:</b> ${project.status}</p>
-            <p><b>Data de Início:</b> ${startDate}</p>
-            <p><b>Data de Fim:</b> ${endDate}</p>
-            <div class="section">
-              <h3>Etapas:</h3>
-              ${etapasHTML}
-            </div>
+            <p><b>Data de Início:</b> ${formatDate(project.startDate)}</p>
+            <p><b>Data de Fim:</b> ${formatDate(project.endDate)}</p>
+            <h3>Etapas:</h3>
+            ${etapasHTML}
           </body>
         </html>
       `;
 
-      // Gera o arquivo PDF
-      const { uri } = await Print.printToFileAsync({ html: htmlContent });
-
-      // Compartilha o arquivo
+      const { uri } = await Print.printToFileAsync({ html });
       await Sharing.shareAsync(uri);
-
-      Alert.alert("Sucesso", "Relatório gerado e pronto para compartilhamento!");
-    } catch (error) {
-      Alert.alert("Erro", "Não foi possível gerar o relatório.");
-      console.error(error);
+    } catch {
+      Alert.alert("Erro", "Falha ao gerar relatório do projeto.");
     }
-  };
+  }
 
-  // 🔍 Filtro e busca
-  const filteredProjects = projects.filter((project) => {
-    const statusMatch = filtro === "Todos" || project.status === filtro;
-    const searchMatch =
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.line.toLowerCase().includes(searchTerm.toLowerCase());
-    return statusMatch && searchMatch;
+  async function gerarRelatorioAnaliseIA(report: AnalysisReport) {
+    try {
+      const dataEmissao = formatDate(report.createdAt);
+      const { resultado } = report;
+
+      const divergenciasHTML = resultado.divergencias_encontradas?.length
+        ? resultado.divergencias_encontradas
+            .map(
+              (div, i) =>
+                `<p><b>${i + 1}.</b> ${div.tipo} [${div.criticidade.toUpperCase()}]: ${div.descricao}</p>`
+            )
+            .join("")
+        : "<p>Nenhuma divergência encontrada.</p>";
+
+      const recomendacoesHTML = resultado.recomendacoes_imediatas?.length
+        ? resultado.recomendacoes_imediatas.map((rec, i) => `<p><b>${i + 1}.</b> ${rec}</p>`).join("")
+        : "<p>Sem recomendações imediatas.</p>";
+
+      const html = `
+        <html>
+          <body style="font-family: Arial; padding: 24px;">
+            <h2 style="color:#003087;">Relatório de Análise com IA</h2>
+            <p><b>Data da Análise:</b> ${dataEmissao}</p>
+            <p><b>Projeto:</b> ${report.projectName || "Não especificado"}</p>
+            <p><b>Responsável:</b> ${report.createdBy || "Não informado"}</p>
+            <p><b>Conformidade:</b> ${resultado.percentual_conformidade}%</p>
+            <p><b>Status da Obra:</b> ${resultado.status_obra}</p>
+            <h3>Resumo Executivo</h3>
+            <p>${resultado.resumo_executivo}</p>
+            <h3>Divergências Encontradas</h3>
+            ${divergenciasHTML}
+            <h3>Recomendações Imediatas</h3>
+            ${recomendacoesHTML}
+          </body>
+        </html>
+      `;
+
+      const { uri } = await Print.printToFileAsync({ html });
+      await Sharing.shareAsync(uri);
+    } catch {
+      Alert.alert("Erro", "Falha ao gerar relatório da Análise IA.");
+    }
+  }
+
+  const filteredProjects = projects.filter((p) => {
+    if (tipoRelatorio === "Análises IA") return false;
+    const statusOk = filtro === "Todos" || p.status === filtro;
+    const match =
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.line.toLowerCase().includes(searchTerm.toLowerCase());
+    return statusOk && match;
+  });
+
+  const filteredReports = analysisReports.filter((r) => {
+    if (tipoRelatorio === "Projetos") return false;
+    const match =
+      (r.projectName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (r.contexto || "").toLowerCase().includes(searchTerm.toLowerCase());
+    return match;
   });
 
   return (
     <View style={styles.container}>
       <Header />
 
-      <View style={styles.mainContent}>
-        {/* 🔎 Barra de busca */}
+      <ScrollView style={styles.mainContent}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Digite o nome do projeto"
+          placeholder="Buscar relatórios..."
           value={searchTerm}
           onChangeText={setSearchTerm}
         />
 
-        {/* 🎯 Filtros */}
+        {/* Tipo de Relatório */}
         <View style={styles.filterContainer}>
-          {["Todos", "Finalizado", "Em andamento", "Não iniciado"].map(
-            (status) => (
+          {["Todos", "Projetos", "Análises IA"].map((tipo) => (
+            <TouchableOpacity
+              key={tipo}
+              style={[styles.filterButton, tipoRelatorio === tipo && styles.filterButtonActive]}
+              onPress={() => setTipoRelatorio(tipo)}
+            >
+              <Text style={[styles.filterText, tipoRelatorio === tipo && styles.filterTextActive]}>
+                {tipo}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Filtro de Status */}
+        {tipoRelatorio !== "Análises IA" && (
+          <View style={styles.filterContainer}>
+            {["Todos", "Finalizado", "Em andamento", "Não iniciado"].map((status) => (
               <TouchableOpacity
                 key={status}
-                style={[
-                  styles.filterButton,
-                  filtro === status && styles.filterButtonActive,
-                ]}
+                style={[styles.filterButton, filtro === status && styles.filterButtonActive]}
                 onPress={() => setFiltro(status)}
               >
-                <Text
-                  style={[
-                    styles.filterText,
-                    filtro === status && styles.filterTextActive,
-                  ]}
-                >
+                <Text style={[styles.filterText, filtro === status && styles.filterTextActive]}>
                   {status}
                 </Text>
               </TouchableOpacity>
-            )
-          )}
-        </View>
+            ))}
+          </View>
+        )}
 
-        {/* 📋 Lista de projetos */}
         {loading ? (
           <ActivityIndicator size="large" color="#003087" />
         ) : (
-          <FlatList
-            data={filteredProjects}
-            keyExtractor={(item) => item.id || item.name}
-            renderItem={({ item }) => (
-              <View style={styles.projectCard}>
-                <View style={styles.projectInfo}>
-                  <Text style={styles.projectTitle}>
-                    {item.name} - {item.line}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.statusBadge,
-                      item.status === "Finalizado"
-                        ? styles.statusFinalizado
-                        : item.status === "Em andamento"
-                        ? styles.statusEmAndamento
-                        : styles.statusNaoIniciado,
-                    ]}
-                  >
-                    {item.status}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  style={styles.reportButton}
-                  onPress={() => gerarRelatorioPDF(item)}
-                >
-                  <Text style={styles.reportButtonText}>Obter Relatório</Text>
-                </TouchableOpacity>
+          <>
+            {/* 🤖 Relatórios IA */}
+            {filteredReports.length > 0 && (
+              <View>
+                <Text style={styles.sectionTitle}>🤖 Análises IA</Text>
+                {filteredReports.map((r) => (
+                  <View key={r.id} style={styles.projectCard}>
+                    <Text style={styles.projectTitle}>{r.projectName || "Análise de Conformidade"}</Text>
+                    <Text>Conformidade: {r.resultado.percentual_conformidade}%</Text>
+                    <Text>Status: {r.resultado.status_obra}</Text>
+
+                    <TouchableOpacity
+                      style={styles.reportButton}
+                      onPress={() => gerarRelatorioAnaliseIA(r)}
+                    >
+                      <Text style={styles.reportButtonText}>Baixar PDF</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
               </View>
             )}
-            ListEmptyComponent={
-              <Text style={styles.noProjects}>Nenhum projeto encontrado.</Text>
-            }
-          />
+
+            {/* 📊 Projetos */}
+            {filteredProjects.length > 0 && (
+              <View>
+                <Text style={styles.sectionTitle}>📊 Projetos</Text>
+                {filteredProjects.map((p) => (
+                  <View key={p.id} style={styles.projectCard}>
+                    <Text style={styles.projectTitle}>{p.name} - {p.line}</Text>
+                    <Text>{p.status}</Text>
+
+                    <TouchableOpacity
+                      style={styles.reportButton}
+                      onPress={() => gerarRelatorioProjeto(p)}
+                    >
+                      <Text style={styles.reportButtonText}>Baixar PDF</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {filteredProjects.length === 0 && filteredReports.length === 0 && (
+              <Text style={styles.noProjects}>Nenhum relatório encontrado.</Text>
+            )}
+          </>
         )}
-      </View>
+      </ScrollView>
 
       <BottomNavigation />
     </View>

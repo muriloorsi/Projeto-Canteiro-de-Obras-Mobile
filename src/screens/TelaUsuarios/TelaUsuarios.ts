@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+  /* ===========================
+     ESTRUTURA PRINCIPAL
+  ============================ */
   container: {
     flex: 1,
     backgroundColor: "#F0F2F5",
@@ -17,8 +20,12 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 30,
     paddingHorizontal: 20,
-    paddingBottom: 100, // espaço para o BottomNavigation
+    paddingBottom: 100, // espaço extra para o BottomNavigation
   },
+
+  /* ===========================
+     CARTÃO DE PERFIL / CONTEÚDO
+  ============================ */
   card: {
     width: "100%",
     maxWidth: 400,
@@ -32,19 +39,27 @@ export const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 4,
   },
+
+  /* ===========================
+     AVATAR / IMAGEM DE PERFIL
+  ============================ */
   avatar: {
     width: 120,
     height: 120,
     borderRadius: 60,
     marginBottom: 20,
   },
+
+  /* ===========================
+     CAMPOS E INFORMAÇÕES
+  ============================ */
   inputGroup: {
     width: "100%",
     marginBottom: 16,
   },
   label: {
-    fontWeight: "600",
     fontSize: 14,
+    fontWeight: "600",
     color: "#333",
     marginBottom: 6,
   },

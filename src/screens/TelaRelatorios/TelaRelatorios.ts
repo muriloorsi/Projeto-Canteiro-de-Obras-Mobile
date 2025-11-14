@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+  /* ===========================
+     ESTRUTURA PRINCIPAL
+  ============================ */
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -8,8 +11,12 @@ export const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     padding: 16,
-    paddingBottom: 100, // Adiciona o padding inferior para evitar que o conteúdo fique atrás do BottomNavigation
+    paddingBottom: 100,
   },
+
+  /* ===========================
+     CAMPO DE BUSCA
+  ============================ */
   searchInput: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -18,6 +25,10 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 14,
   },
+
+  /* ===========================
+     FILTROS
+  ============================ */
   filterContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -29,8 +40,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 20,
     backgroundColor: "#e6e6e6",
-    marginRight: 8,
-    marginBottom: 8,
   },
   filterButtonActive: {
     backgroundColor: "#003087",
@@ -42,6 +51,21 @@ export const styles = StyleSheet.create({
   filterTextActive: {
     color: "#fff",
   },
+
+  /* ===========================
+     TÍTULO DAS SEÇÕES
+     (ex: "📊 Relatórios" / "🤖 IA")
+  ============================ */
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#003087",
+    marginVertical: 10,
+  },
+
+  /* ===========================
+     CARTÕES DE PROJETO / RELATÓRIO
+  ============================ */
   projectCard: {
     backgroundColor: "#fff",
     padding: 16,
@@ -52,43 +76,31 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  projectInfo: {
-    marginBottom: 10,
-  },
   projectTitle: {
     fontSize: 16,
     fontWeight: "700",
     color: "#333",
     marginBottom: 6,
   },
-  statusBadge: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 20,
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  statusFinalizado: {
-    backgroundColor: "#059669",
-  },
-  statusEmAndamento: {
-    backgroundColor: "#001489",
-  },
-  statusNaoIniciado: {
-    backgroundColor: "#4a4a4a",
-  },
+
+  /* ===========================
+     BOTÃO DE RELATÓRIO
+  ============================ */
   reportButton: {
     backgroundColor: "#003087",
     paddingVertical: 8,
     borderRadius: 8,
     alignItems: "center",
+    marginTop: 10,
   },
   reportButtonText: {
     color: "#fff",
     fontWeight: "bold",
   },
+
+  /* ===========================
+     TEXTO QUANDO NÃO HÁ PROJETOS
+  ============================ */  
   noProjects: {
     textAlign: "center",
     color: "#777",

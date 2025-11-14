@@ -1,6 +1,10 @@
-import { StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+
+  /* ===========================
+     CONTAINER E ESTRUTURA GERAL
+  ============================ */
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -21,7 +25,12 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     color: "#003087",
+    textAlign: "center",
   },
+
+  /* ===========================
+     FORMULÁRIO PRINCIPAL
+  ============================ */
   formRowMobile: {
     flexDirection: "column",
     gap: 15,
@@ -54,8 +63,11 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff",
     fontSize: 14,
     width: "100%",
-    marginBottom: 0,
   },
+
+  /* ===========================
+     PICKERS E MODAIS DE SELEÇÃO
+  ============================ */
   pickerContainer: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -63,16 +75,19 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 12,
   },
+  disabledPicker: {
+    opacity: 0.5,
+  },
   pickerText: {
     fontSize: 14,
     color: "#000",
   },
   pickerModalCard: {
     backgroundColor: "#fff",
+    borderRadius: 12,
     padding: 20,
-    borderRadius: 10,
-    width: "80%",
-    maxHeight: 300,
+    width: "85%",
+    maxHeight: "70%",
   },
   pickerItem: {
     paddingVertical: 15,
@@ -82,7 +97,28 @@ export const styles = StyleSheet.create({
   pickerModalText: {
     fontSize: 16,
     textAlign: "center",
+    color: "#333",
   },
+  pickerOption: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  pickerOptionText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  stageListScroll: {
+  maxHeight: 250, // limite de altura visível
+  marginBottom: 15,
+  },
+  stageListContent: {
+    paddingBottom: 10,
+  },
+
+  /* ===========================
+     BOTÕES (GERAIS E AÇÕES)
+  ============================ */
   button: {
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -97,7 +133,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#003087",
   },
   cancelBtn: {
-    backgroundColor: "#d62828", // Cor para o botão de cancelar
+    backgroundColor: "#d62828",
   },
   backBtn: {
     backgroundColor: "#d62828",
@@ -115,16 +151,29 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 15,
     alignSelf: "flex-end",
   },
-  buttonRight: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
+  browseBtn: {
+    backgroundColor: "#003087",
+    paddingHorizontal: 30,
+    marginTop: 10,
+  },
+  popupBtn: {
+    backgroundColor: "#003087",
     marginTop: 10,
   },
   buttonGroup: {
     flexDirection: "row",
-    justifyContent: "space-between", // Alterado para 'space-between'
+    justifyContent: "space-between",
     marginTop: 10,
   },
+  bottomButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+
+  /* ===========================
+     ETAPAS DO PROJETO
+  ============================ */
   stageForm: {
     flexDirection: "column",
     gap: 15,
@@ -161,35 +210,13 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 12,
-    overflow: "hidden",
     alignSelf: "flex-start",
   },
-  bottomButtons: {
+  dateInputWrapper: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-  popupOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  popupCard: {
-    backgroundColor: "#f3f3f3",
-    padding: 30,
-    borderRadius: 14,
-    alignItems: "center",
-    width: "80%",
-  },
-  popupTitle: {
-    marginBottom: 20,
-    fontSize: 20,
-    fontWeight: "700",
-  },
-  popupBtn: {
-    backgroundColor: "#003087",
-    marginTop: 10,
+    flexWrap: "wrap",
+    gap: 15,
+    alignItems: "flex-end",
   },
   dateInputContainer: {
     flexDirection: "row",
@@ -209,6 +236,10 @@ export const styles = StyleSheet.create({
   calendarIcon: {
     fontSize: 20,
   },
+
+  /* ===========================
+     UPLOAD E PRÉ-VISUALIZAÇÃO DE IMAGEM
+  ============================ */
   imageUploadContainer: {
     borderWidth: 2,
     borderColor: "#ccc",
@@ -231,11 +262,6 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
     textAlign: "center",
-  },
-  browseBtn: {
-    backgroundColor: "#003087",
-    paddingHorizontal: 30,
-    marginTop: 10,
   },
   imagePreviewContainer: {
     flexDirection: "row",
@@ -270,10 +296,28 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 12,
   },
-  dateInputWrapper: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 15,
-    alignItems: 'flex-end',
+
+  /* ===========================
+     POPUPS E OVERLAYS
+  ============================ */
+  popupOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
   },
+  popupCard: {
+    backgroundColor: "#f3f3f3",
+    padding: 30,
+    borderRadius: 14,
+    alignItems: "center",
+    width: "80%",
+  },
+  popupTitle: {
+    marginBottom: 20,
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#003087",
+  },
+
 });

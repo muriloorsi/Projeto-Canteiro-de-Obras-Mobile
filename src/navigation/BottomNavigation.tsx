@@ -57,6 +57,16 @@ export default function BottomNavigation() {
       </TouchableOpacity>
 
       <TouchableOpacity
+        onPress={() => navigation.navigate("Home")}
+        style={[styles.button, isActive("Home") && styles.activeButton]}
+      >
+        <Image
+          source={require("../assets/home.png")}
+          style={[styles.icon, isActive("Home") && styles.activeIcon]}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
         onPress={() => navigation.navigate("TelaCriarProjeto")}
         style={[styles.button, isActive("TelaCriarProjeto") && styles.activeButton]}
       >

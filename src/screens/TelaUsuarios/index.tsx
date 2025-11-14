@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, ActivityIndicator} from "react-native";
+import { View, Text, Image, ScrollView, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "../../Header/header";
 import BottomNavigation from "../../navigation/BottomNavigation";
@@ -44,30 +44,23 @@ export default function Usuario() {
   return (
     <View style={styles.container}>
       <Header />
+
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.card}>
           <Image source={avatar} style={styles.avatar} />
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Nome</Text>
-            <View style={styles.disabledInput}>
-              <Text style={styles.inputText}>{nome || "—"}</Text>
+          {[
+            { label: "Nome", value: nome },
+            { label: "Permissão", value: permissao },
+            { label: "Email", value: email },
+          ].map((item, index) => (
+            <View key={index} style={styles.inputGroup}>
+              <Text style={styles.label}>{item.label}</Text>
+              <View style={styles.disabledInput}>
+                <Text style={styles.inputText}>{item.value || "—"}</Text>
+              </View>
             </View>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Permissão</Text>
-            <View style={styles.disabledInput}>
-              <Text style={styles.inputText}>{permissao || "—"}</Text>
-            </View>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.disabledInput}>
-              <Text style={styles.inputText}>{email || "—"}</Text>
-            </View>
-          </View>
+          ))}
         </View>
       </ScrollView>
 

@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+  /* ===========================
+     ESTRUTURA PRINCIPAL
+  ============================ */
   container: {
     flex: 1,
     backgroundColor: "#F0F2F5",
@@ -10,8 +13,42 @@ export const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 100,
   },
+
+  /* ===========================
+     ESTADOS DE CARREGAMENTO / LISTA VAZIA
+  ============================ */
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    color: "#4B5563",
+    fontSize: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#374151",
+  },
+  emptySubText: {
+    fontSize: 15,
+    color: "#6B7280",
+    marginTop: 4,
+  },
+
+  /* ===========================
+     Cartão de projeto
+  ============================ */
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF",
     borderRadius: 12,
     marginBottom: 16,
     overflow: "hidden",
@@ -43,6 +80,11 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1E293B",
   },
+
+
+  /* ===========================
+     BARRA DE PROGRESSO
+  ============================ */
   progressBarContainer: {
     marginTop: 8,
   },
