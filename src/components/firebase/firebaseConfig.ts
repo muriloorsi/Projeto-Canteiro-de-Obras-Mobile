@@ -1,6 +1,6 @@
 // src/components/firebase/firebaseConfig.tsx
-import { initializeApp } from "firebase/app";
-import { initializeAuth, getReactNativePersistence } from "firebase/auth/react-native";
+import { initializeApp, getApp, getApps } from "firebase/app";
+import { initializeAuth, getAuth, getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
@@ -14,11 +14,26 @@ const firebaseConfig = {
   appId: Constants.expoConfig?.extra?.FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+// Inicializa o app apenas se ainda não foi inicializado
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage),
-});
+// Inicializa o auth apenas se ainda não foi inicializado
+let auth;
+try {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+} catch (error: any) {
+  // Se o auth já foi inicializado, apenas obtém a instância existente
+  if (error?.code === 'auth/already-initialized' || 
+      error?.message?.includes('already initialized')) {
+    auth = getAuth(app);
+  } else {
+    // Para outros erros, tenta usar getAuth como fallback
+    console.warn("Erro ao inicializar auth, tentando getAuth:", error);
+    auth = getAuth(app);
+  }
+}
 
 const db = getFirestore(app);
 

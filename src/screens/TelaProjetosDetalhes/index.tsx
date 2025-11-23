@@ -16,23 +16,38 @@ export default function TelaProjetosDetalhes() {
   const navigation = useNavigation<NavigationProp>();
   const { projeto } = route.params;
 
+  // 🔥 Garante sempre um número válido
+  const rawProgress = String(projeto?.progresso ?? "").replace("%", "");
+  const progressoObra = Number(rawProgress);
+  const progressoSeguro = isNaN(progressoObra) ? 0 : progressoObra;
+
+  console.log("PROGRESSO RECEBIDO:", projeto.progresso);
+  console.log("PROGRESSO TRATADO:", progressoSeguro);
+
   const [capturas, setCapturas] = useState([
     require("../../assets/img-teste-obras.png"),
     require("../../assets/img-teste-obras.png"),
     require("../../assets/img-teste-obras.png"),
   ]);
 
-  const progressoObra = projeto.progresso;
+  // 🎯 Círculo de progresso protegido
   const radius = 45;
   const strokeWidth = 10;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (progressoObra / 100) * circumference;
+  const strokeDashoffset = circumference - (progressoSeguro / 100) * circumference;
 
+  // 🎯 Gráfico protegido (sem NaN)
   const graficoData = {
     labels: ["Jan", "Mar", "Mai", "Jul", "Set", "Nov"],
     datasets: [
-      { data: [0, 10, 35, 45, 70, progressoObra], color: () => "#1E40AF" },
-      { data: [0, 20, 50, 60, 85, 100], color: () => "#93c5fd" },
+      {
+        data: [0, 10, 35, 45, 70, progressoSeguro],
+        color: () => "#1E40AF",
+      },
+      {
+        data: [0, 20, 50, 60, 85, 100],
+        color: () => "#93c5fd",
+      },
     ],
     legend: ["Executado", "Planejado"],
   };
@@ -53,6 +68,7 @@ export default function TelaProjetosDetalhes() {
             allowsEditing: true,
             quality: 1,
           });
+
           if (!res.canceled)
             setCapturas((prev) => [...prev, { uri: res.assets[0].uri }]);
         },
@@ -65,6 +81,7 @@ export default function TelaProjetosDetalhes() {
             allowsEditing: true,
             quality: 1,
           });
+
           if (!res.canceled)
             setCapturas((prev) => [...prev, { uri: res.assets[0].uri }]);
         },
@@ -75,10 +92,8 @@ export default function TelaProjetosDetalhes() {
 
   return (
     <View style={styles.screen}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+
         {/* 🏗️ Título */}
         <Text style={styles.title}>
           {projeto.titulo}
@@ -88,6 +103,7 @@ export default function TelaProjetosDetalhes() {
         {/* 🔵 Progresso da Obra */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Progresso da Obra</Text>
+
           <View style={styles.progressContainer}>
             <Svg height="120" width="120" viewBox="0 0 120 120">
               <Circle
@@ -98,6 +114,7 @@ export default function TelaProjetosDetalhes() {
                 strokeWidth={strokeWidth}
                 fill="none"
               />
+
               <Circle
                 cx="60"
                 cy="60"
@@ -112,8 +129,10 @@ export default function TelaProjetosDetalhes() {
                 origin="60,60"
               />
             </Svg>
-            <Text style={styles.progressText}>{progressoObra}%</Text>
+
+            <Text style={styles.progressText}>{progressoSeguro}%</Text>
           </View>
+
           <Text style={styles.progressStatus}>Em andamento</Text>
         </View>
 
@@ -141,6 +160,7 @@ export default function TelaProjetosDetalhes() {
         {/* 📅 Próximas Etapas */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Próximas Etapas</Text>
+
           {proximasEtapas.map((etapa, idx) => (
             <View key={idx} style={styles.etapaItem}>
               <Text style={styles.etapaTitulo}>{etapa.nome}</Text>
@@ -149,6 +169,7 @@ export default function TelaProjetosDetalhes() {
               </Text>
             </View>
           ))}
+
           <TouchableOpacity style={styles.btn}>
             <Text style={styles.btnText}>Ver Mais</Text>
           </TouchableOpacity>
@@ -157,14 +178,15 @@ export default function TelaProjetosDetalhes() {
         {/* 📊 Gráfico */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Cronograma das Etapas</Text>
+
           <LineChart
             data={graficoData}
             width={Dimensions.get("window").width - 60}
             height={220}
             chartConfig={{
-              backgroundColor: "#ffffff",
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
+              backgroundColor: "#fff",
+              backgroundGradientFrom: "#fff",
+              backgroundGradientTo: "#fff",
               color: (opacity = 1) => `rgba(30, 64, 175, ${opacity})`,
               labelColor: () => "#374151",
               propsForDots: { r: "4" },
@@ -188,13 +210,11 @@ export default function TelaProjetosDetalhes() {
         <TouchableOpacity style={styles.btnPrimary} onPress={handleNovaCaptura}>
           <Text style={styles.btnPrimaryText}>Nova Captura</Text>
         </TouchableOpacity>
+
       </ScrollView>
 
       {/* 🔙 Voltar */}
-      <TouchableOpacity
-        style={styles.btnVoltar}
-        onPress={() => navigation.navigate("Home")}
-      >
+      <TouchableOpacity style={styles.btnVoltar} onPress={() => navigation.navigate("Home")}>
         <Text style={styles.btnVoltarText}>Voltar</Text>
       </TouchableOpacity>
     </View>
