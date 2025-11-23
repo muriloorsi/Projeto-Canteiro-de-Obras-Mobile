@@ -57,12 +57,12 @@ export default function BottomNavigation() {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("Home")}
-        style={[styles.button, isActive("Home") && styles.activeButton]}
+        onPress={() => navigation.navigate("TelaAnaliseObra")}
+        style={[styles.button, isActive("TelaAnaliseObra") && styles.activeButton]}
       >
         <Image
-          source={require("../assets/home.png")}
-          style={[styles.icon, isActive("Home") && styles.activeIcon]}
+          source={require("../assets/lupa.png")} 
+          style={[styles.icon, isActive("TelaAnaliseObra") && styles.activeIcon]}
         />
       </TouchableOpacity>
 
@@ -118,9 +118,9 @@ const styles = StyleSheet.create({
   icon: {
     width: 35,
     height: 35,
-    tintColor: "#FFFFFF", // cor padrão (inativo)
+    tintColor: "#FFFFFF", 
   },
   activeIcon: {
-    tintColor: "#001489", // cor quando ativo
+    tintColor: "#001489", 
   },
 });
