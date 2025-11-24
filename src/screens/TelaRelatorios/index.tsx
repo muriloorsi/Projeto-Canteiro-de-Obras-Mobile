@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from "react-native";
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  ActivityIndicator, 
+  Alert, 
+  ScrollView 
+} from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
@@ -8,6 +16,7 @@ import BottomNavigation from "../../navigation/BottomNavigation";
 import { db } from "../../components/firebase/firebaseConfig";
 import { styles } from "./TelaRelatorios";
 
+// Interfaces mantidas iguais
 interface Step {
   name: string;
   startDate: any;
@@ -81,16 +90,11 @@ export default function TelaRelatorios() {
   async function gerarRelatorioProjeto(project: Project) {
     try {
       const dataEmissao = new Date().toLocaleDateString("pt-BR");
-
       const etapasHTML = project.steps?.length
         ? project.steps
-            .map(
-              (etapa, i) =>
-                `<p><b>${i + 1}.</b> ${etapa.name} (${formatDate(etapa.startDate)} até ${formatDate(
-                  etapa.endDate
-                )})</p>`
-            )
-            .join("")
+            .map((etapa, i) =>
+              `<p><b>${i + 1}.</b> ${etapa.name} (${formatDate(etapa.startDate)} até ${formatDate(etapa.endDate)})</p>`
+            ).join("")
         : "<p>Nenhuma etapa cadastrada.</p>";
 
       const html = `
@@ -122,11 +126,9 @@ export default function TelaRelatorios() {
 
       const divergenciasHTML = resultado.divergencias_encontradas?.length
         ? resultado.divergencias_encontradas
-            .map(
-              (div, i) =>
-                `<p><b>${i + 1}.</b> ${div.tipo} [${div.criticidade.toUpperCase()}]: ${div.descricao}</p>`
-            )
-            .join("")
+            .map((div, i) =>
+              `<p><b>${i + 1}.</b> ${div.tipo} [${div.criticidade.toUpperCase()}]: ${div.descricao}</p>`
+            ).join("")
         : "<p>Nenhuma divergência encontrada.</p>";
 
       const recomendacoesHTML = resultado.recomendacoes_imediatas?.length
@@ -180,7 +182,15 @@ export default function TelaRelatorios() {
     <View style={styles.container}>
       <Header />
 
-      <ScrollView style={styles.mainContent}>
+      {/* CORREÇÃO AQUI: 
+         - style controla o layout do componente na tela.
+         - contentContainerStyle controla o padding interno do conteúdo rolável.
+      */}
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar relatórios..."
@@ -188,7 +198,7 @@ export default function TelaRelatorios() {
           onChangeText={setSearchTerm}
         />
 
-        {/* Tipo de Relatório */}
+        {/* Filtro de Tipo */}
         <View style={styles.filterContainer}>
           {["Todos", "Projetos", "Análises IA"].map((tipo) => (
             <TouchableOpacity
@@ -203,7 +213,7 @@ export default function TelaRelatorios() {
           ))}
         </View>
 
-        {/* Filtro de Status */}
+        {/* Filtro de Status (apenas se não for IA) */}
         {tipoRelatorio !== "Análises IA" && (
           <View style={styles.filterContainer}>
             {["Todos", "Finalizado", "Em andamento", "Não iniciado"].map((status) => (
@@ -221,7 +231,7 @@ export default function TelaRelatorios() {
         )}
 
         {loading ? (
-          <ActivityIndicator size="large" color="#003087" />
+          <ActivityIndicator size="large" color="#003087" style={{ marginTop: 20 }} />
         ) : (
           <>
             {/* 🤖 Relatórios IA */}

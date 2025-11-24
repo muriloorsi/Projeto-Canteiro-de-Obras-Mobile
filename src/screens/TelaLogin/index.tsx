@@ -5,7 +5,7 @@ import { styles } from "./telalogin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 
-const API_URL = "http://192.168.0.212:5000/api/auth/login";
+const API_URL = "http://10.11.66.92:5000/api/auth/login";
 
 export default function TelaLogin() {
   const navigation = useNavigation();
@@ -42,7 +42,6 @@ export default function TelaLogin() {
         return;
       }
 
-      // Salvando igual no web:
       await AsyncStorage.multiSet([
         ["token", data.token],
         ["nomeUsuario", data.user.name],

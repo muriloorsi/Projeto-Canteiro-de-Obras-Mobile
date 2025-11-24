@@ -20,12 +20,12 @@ import { AnalysisResult } from "./geminiService";
 export interface AnalysisReport {
   id?: string;
   projectName?: string;
-  projectId?: string;
+  projectId: string;
   bimImageUrl?: string;
   obraImageUrl?: string;
   contexto?: string;
   resultado: AnalysisResult;
-  createdAt: Date | Timestamp;
+  createdAt: Timestamp;
   createdBy?: string; // Email do usuário
 }
 

@@ -144,32 +144,61 @@ export function calcularProgressoProjeto(projeto: any) {
   if (!projeto.startDate || !projeto.endDate) return 0;
 
   // Converte qualquer formato de data
-  const parseDate = (dateValue: any): Date => {
-    if (!dateValue) return new Date();
+  const parseDate = (dateValue: any): Date | null => {
+    if (!dateValue) return null;
 
+    // Se já é uma instância de Date
     if (dateValue instanceof Date) {
       return dateValue;
     }
 
+    // Firestore Timestamp com .seconds
     if (typeof dateValue === "object" && "seconds" in dateValue) {
       return new Date(dateValue.seconds * 1000);
     }
 
-    if (typeof dateValue === "string") {
-      return new Date(dateValue + "T00:00:00");
+    // Firestore Timestamp com método .toDate()
+    if (typeof dateValue === "object" && typeof dateValue.toDate === "function") {
+      try {
+        return dateValue.toDate();
+      } catch (e) {
+        console.error("Erro ao converter Timestamp:", e);
+        return null;
+      }
     }
 
-    return new Date();
+    // String (YYYY-MM-DD ou ISO)
+    if (typeof dateValue === "string") {
+      const date = new Date(dateValue.includes("T") ? dateValue : `${dateValue}T00:00:00`);
+      return isNaN(date.getTime()) ? null : date;
+    }
+
+    return null;
   };
 
   const start = parseDate(projeto.startDate);
   const end = parseDate(projeto.endDate);
+
+  // Se não conseguiu converter, retorna 0
+  if (!start || !end) {
+    console.warn(`Erro ao calcular progresso do projeto ${projeto.id}:`, {
+      startDate: projeto.startDate,
+      endDate: projeto.endDate,
+      startConverted: start,
+      endConverted: end
+    });
+    return 0;
+  }
+
   const now = new Date();
 
   if (now < start) return 0;
 
   const total = end.getTime() - start.getTime();
   const elapsed = now.getTime() - start.getTime();
+
+  // Se a data final é antes da data inicial, retorna 0
+  if (total <= 0) return 0;
 
   const percent = Math.min(Math.max((elapsed / total) * 100, 0), 100);
 

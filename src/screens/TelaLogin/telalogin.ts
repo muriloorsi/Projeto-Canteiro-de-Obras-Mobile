@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     width: 280,
     height: 75,
     marginBottom: 90,
+    marginTop: 50,
   },
   innerContainer: {
     width: "85%",

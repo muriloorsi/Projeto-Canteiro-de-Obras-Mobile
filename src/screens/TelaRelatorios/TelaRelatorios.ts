@@ -2,21 +2,28 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   /* ===========================
-     ESTRUTURA PRINCIPAL
-  ============================ */
+      ESTRUTURA PRINCIPAL
+   ============================ */
   container: {
     flex: 1,
     backgroundColor: "#fff",
   },
-  mainContent: {
+  
+  // O container do ScrollView ocupa toda a tela disponível
+  scrollContainer: {
     flex: 1,
+  },
+  
+  // O conteúdo interno tem padding e, crucialmente, um paddingBottom grande
+  // para compensar a BottomNavigation flutuante
+  scrollContent: {
     padding: 16,
-    paddingBottom: 100,
+    paddingBottom: 120, // Aumentei aqui para liberar o último card
   },
 
   /* ===========================
-     CAMPO DE BUSCA
-  ============================ */
+      CAMPO DE BUSCA
+   ============================ */
   searchInput: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -27,8 +34,8 @@ export const styles = StyleSheet.create({
   },
 
   /* ===========================
-     FILTROS
-  ============================ */
+      FILTROS
+   ============================ */
   filterContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -53,9 +60,8 @@ export const styles = StyleSheet.create({
   },
 
   /* ===========================
-     TÍTULO DAS SEÇÕES
-     (ex: "📊 Relatórios" / "🤖 IA")
-  ============================ */
+      TÍTULOS E TEXTOS
+   ============================ */
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
@@ -64,17 +70,21 @@ export const styles = StyleSheet.create({
   },
 
   /* ===========================
-     CARTÕES DE PROJETO / RELATÓRIO
-  ============================ */
+      CARTÕES (CARDS)
+   ============================ */
   projectCard: {
     backgroundColor: "#fff",
     padding: 16,
     borderRadius: 10,
     marginBottom: 12,
+    // Sombra suave
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3, 
+    borderWidth: 1,
+    borderColor: "#f0f0f0"
   },
   projectTitle: {
     fontSize: 16,
@@ -84,11 +94,11 @@ export const styles = StyleSheet.create({
   },
 
   /* ===========================
-     BOTÃO DE RELATÓRIO
-  ============================ */
+      BOTÃO DE DOWNLOAD (PDF)
+   ============================ */
   reportButton: {
     backgroundColor: "#003087",
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 8,
     alignItems: "center",
     marginTop: 10,
@@ -96,11 +106,12 @@ export const styles = StyleSheet.create({
   reportButtonText: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: 14,
   },
 
   /* ===========================
-     TEXTO QUANDO NÃO HÁ PROJETOS
-  ============================ */  
+      ESTADOS VAZIOS
+   ============================ */  
   noProjects: {
     textAlign: "center",
     color: "#777",
